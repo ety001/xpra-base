@@ -30,4 +30,4 @@ USER lzc
 WORKDIR /home/lzc
 VOLUME ["/home/lzc/.ssh"]
 
-CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["sudo", "/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
