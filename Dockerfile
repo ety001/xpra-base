@@ -27,6 +27,7 @@ RUN useradd -m -s /bin/bash lzc && \
 
 EXPOSE 22
 USER lzc
+WORKDIR /home/lzc
 VOLUME ["/home/lzc/.ssh"]
 
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
