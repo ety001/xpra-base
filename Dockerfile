@@ -18,7 +18,8 @@ RUN apt update -y && \
         gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
         gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools \
         gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 \
-        gstreamer1.0-qt5 gstreamer1.0-pulseaudio && \
+        gstreamer1.0-qt5 gstreamer1.0-pulseaudio intel-media-va-driver-non-free \
+        libva-dev vainfo && \
     wget -O "/tmp/virtualgl.deb" $VIRTUAL_GL && \
     dpkg -i /tmp/virtualgl.deb && \
     rm -f /tmp/virtualgl.deb && \
@@ -29,14 +30,15 @@ RUN apt update -y && \
     sed -i 's/^#PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config && \
     sed -i 's/^#PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
 
-ADD ./sshd.conf /etc/supervisor/conf.d/sshd.conf
+COPY ./supervisor/*.conf /etc/supervisor/conf.d/
 
 RUN useradd -m -s /bin/bash lzc && \
-    usermod -aG sudo lzc && \
+    usermod -aG sudo,audio,video,games,users,xpra,pulse,pulse-access lzc && \
     echo "lzc ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
     mkdir -p /home/lzc/.ssh && chown lzc:lzc /home/lzc/.ssh && \
     touch /home/lzc/.ssh/authorized_keys && chown lzc:lzc /home/lzc/.ssh/authorized_keys && \
-    chmod 700 /home/lzc/.ssh
+    chmod 700 /home/lzc/.ssh && \
+    mkdir -p /run/user/1000 && chown -R lzc:lzc /run/user/1000
 
 EXPOSE 22
 USER lzc
