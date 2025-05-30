@@ -1,14 +1,27 @@
-FROM debian:bookworm-slim
+FROM ubuntu:22.04
 
-ARG REPOFILE=https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/bookworm/xpra-lts.sources
+ARG REPOFILE=https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/jammy/xpra-lts.sources
+ARG VIRTUAL_GL=https://github.com/VirtualGL/virtualgl/releases/download/3.1.3/virtualgl_3.1.3_amd64.deb
+ARG TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt update -y && \
     apt upgrade -y && \
-    apt install -y ca-certificates wget gpg openssh-server supervisor vim sudo && \
+    DEBIAN_FRONTEND=noninteractive apt install -y ca-certificates wget gpg \
+        openssh-server supervisor vim sudo tzdata && \
     wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc && \
     cd /etc/apt/sources.list.d && wget $REPOFILE && \
     apt update -y && \
-    DEBIAN_FRONTEND=noninteractive apt install -y xserver-xorg xpra && \
+    DEBIAN_FRONTEND=noninteractive apt install -y xserver-xorg xpra \
+        libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+        libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base \
+        gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools \
+        gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 \
+        gstreamer1.0-qt5 gstreamer1.0-pulseaudio && \
+    wget -O "/tmp/virtualgl.deb" $VIRTUAL_GL && \
+    dpkg -i /tmp/virtualgl.deb && \
+    rm -f /tmp/virtualgl.deb && \
     apt clean && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir -p /run/sshd && \
