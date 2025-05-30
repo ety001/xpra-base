@@ -1,10 +1,10 @@
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
 ARG REPOFILE=https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/jammy/xpra-lts.sources
 
 RUN apt update -y && \
     apt upgrade -y && \
-    apt install -y ca-certificates wget gpg openssh-server supervisor vim sudo && \
+    DEBIAN_FRONTEND=noninteractive apt install -y ca-certificates wget gpg openssh-server supervisor vim sudo && \
     wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc && \
     cd /etc/apt/sources.list.d && wget $REPOFILE && \
     apt update -y && \
