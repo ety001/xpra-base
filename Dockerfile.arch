@@ -1,40 +1,38 @@
 FROM archlinux:multilib-devel
 
-RUN pacman -Syy && pacman -S xpra openssh supervisor sudo xorg-server \
-    xf86-video-intel xorg-xauth python-paramiko pulseaudio \
+RUN pacman -Syy && pacman -Syu --noconfirm && \
+    pacman -S --noconfirm xpra openssh supervisor sudo xorg-server \
+    vim xf86-video-intel xorg-xauth python-paramiko pulseaudio \
     gstreamer \
+    gstreamer-vaapi \
     gst-plugins-base \
     gst-plugins-good \
     gst-plugins-bad \
     gst-plugins-ugly \
     gst-libav \
-    gstreamer-vaapi \
+    intel-media-driver \
     x264 \
     openh264 \
     libvpx \
     svt-av1 \
-    libva-intel-driver \
     libva-utils \
-    gst-plugins-bad openh264 svt-av1 libvdpau-va-gl
+    libvdpau-va-gl
 
-COPY supervisor/dbus.conf /etc/supervisor.d/dbus.conf
-COPY supervisor/sshd.conf /etc/supervisor.d/sshd.conf
+COPY supervisor/sshd.ini /etc/supervisor.d/sshd.ini
+COPY shell/entry-arch.sh /usr/local/bin/entry.sh
 
-RUN mkdir -p /run/sshd && \
-    mkdir -p /run/user/1001 && \
+RUN ssh-keygen -A && \
     groupadd -r lzc && \
-    useradd -m -d /home/lzc -g lzc -G render,sudo,video,sgx -s /bin/bash lzc && \
-    chown -R lzc:lzc /run/user/1001 && \
-    sed -i 's/^%sudo.*/%sudo ALL=(ALL) NOPASSWD:ALL/' /etc/sudoers && \
+    useradd -m -d /home/lzc -g lzc -G render,wheel,games,video,sgx,xpra -s /bin/bash lzc && \
+    sed -i 's/^# \(%wheel ALL=(ALL:ALL) NOPASSWD: ALL\)/\1/' /etc/sudoers && \
     sed -i 's/^#\?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     sed -i 's/^#\?PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config && \
-    sed -i 's/^#\?PubkeyAuthentication .*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+    sed -i 's/^#\?PubkeyAuthentication .*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
+    chmod +x /usr/local/bin/entry.sh
 
 WORKDIR /home/lzc
 USER lzc
 
 EXPOSE 10000
 
-#CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
-
-CMD ["/lzcapp/pkg/content/entry.sh"]
+CMD ["/usr/local/bin/entry.sh"]
