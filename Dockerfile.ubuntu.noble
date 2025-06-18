@@ -22,7 +22,7 @@ RUN apt update -y && \
 
 ADD ./shell/entry.sh /usr/local/bin/entry.sh
 ADD ./supervisor/sshd.conf /etc/supervisor/conf.d/sshd.conf
-ADD ./supervisor/dbus.conf /etc/supervisor/conf.d/sshd.conf
+ADD ./supervisor/dbus.conf /etc/supervisor/conf.d/dbus.conf
 
 RUN mkdir -p /run/sshd && \
     mkdir -p /run/user/1001 && \
