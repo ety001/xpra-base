@@ -38,7 +38,9 @@ RUN useradd -m -s /bin/bash lzc && \
     mkdir -p /home/lzc/.ssh && chown lzc:lzc /home/lzc/.ssh && \
     touch /home/lzc/.ssh/authorized_keys && chown lzc:lzc /home/lzc/.ssh/authorized_keys && \
     chmod 700 /home/lzc/.ssh && \
-    mkdir -p /run/user/1000 && chown -R lzc:lzc /run/user/1000
+    mkdir -p /run/user && chmod 777 /run/user && \
+    mkdir -p /run/xpra && chmod 777 /run/xpra && \
+    mkdir -p /run/dbus
 
 EXPOSE 22
 USER lzc

@@ -1,0 +1,19 @@
+FROM archlinux:multilib-devel
+
+RUN pacman -Syy && pacman -S xpra openssh supervisor sudo xorg-server \
+    xf86-video-intel xorg-xauth python-paramiko pulseaudio \
+    gstreamer \
+    gst-plugins-base \
+    gst-plugins-good \
+    gst-plugins-bad \
+    gst-plugins-ugly \
+    gst-libav \
+    gstreamer-vaapi \
+    x264 \
+    openh264 \
+    libvpx \
+    svt-av1 \
+    libva-intel-driver \
+    libva-utils \
+    gst-plugins-bad openh264 svt-av1 libvdpau-va-gl
+
