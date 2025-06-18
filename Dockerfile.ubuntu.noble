@@ -20,7 +20,9 @@ RUN apt update -y && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
-ADD ./sshd.conf /etc/supervisor/conf.d/sshd.conf
+ADD ./shell/entry.sh /usr/local/bin/entry.sh
+ADD ./supervisor/sshd.conf /etc/supervisor/conf.d/sshd.conf
+ADD ./supervisor/dbus.conf /etc/supervisor/conf.d/sshd.conf
 
 RUN mkdir -p /run/sshd && \
     mkdir -p /run/user/1001 && \
@@ -39,4 +41,4 @@ EXPOSE 10000
 
 #CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
 
-CMD ["/lzcapp/pkg/content/entry.sh"]
+CMD ["/usr/local/bin/entry.sh"]
