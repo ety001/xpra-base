@@ -1,8 +1,8 @@
 FROM archlinux:multilib-devel
 
 RUN pacman -Syy && pacman -Syu --noconfirm && \
-    pacman -S --noconfirm xpra openssh supervisor sudo xorg-server \
-    vim xf86-video-intel xorg-xauth python-paramiko pulseaudio \
+    pacman -S --noconfirm xpra openssh git supervisor sudo xorg-server \
+    vim curl wget xf86-video-intel xorg-xauth python-paramiko pulseaudio \
     gstreamer \
     gstreamer-vaapi \
     gst-plugins-base \
@@ -19,9 +19,11 @@ RUN pacman -Syy && pacman -Syu --noconfirm && \
     libvdpau-va-gl
 
 COPY supervisor/sshd.ini /etc/supervisor.d/sshd.ini
+COPY supervisor/dbus.ini /etc/supervisor.d/dbus.ini
 COPY shell/entry-arch.sh /usr/local/bin/entry.sh
 
-RUN ssh-keygen -A && \
+RUN mkdir -p /run/dbus && \
+    ssh-keygen -A && \
     groupadd -r lzc && \
     useradd -m -d /home/lzc -g lzc -G render,wheel,games,video,sgx,xpra -s /bin/bash lzc && \
     sed -i 's/^# \(%wheel ALL=(ALL:ALL) NOPASSWD: ALL\)/\1/' /etc/sudoers && \
@@ -32,6 +34,16 @@ RUN ssh-keygen -A && \
 
 WORKDIR /home/lzc
 USER lzc
+
+RUN sudo sed -i 's/\(OPTIONS=(.*\)debug\(.*)\)/\1!debug\2/' /etc/makepkg.conf &&\
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/yay-bin.tar.gz && \
+    tar zxvf yay-bin.tar.gz && \
+    cd yay-bin && \
+    makepkg -si --noconfirm && \
+    cd ~ && \
+    rm -rf yay-bin* && \
+    yay -S xpra-html5-git --noconfirm 
+
 
 EXPOSE 10000
 
