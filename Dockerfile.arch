@@ -1,22 +1,11 @@
 FROM archlinux:multilib-devel
 
 RUN pacman -Syy && pacman -Syu --noconfirm && \
-    pacman -S --noconfirm xpra openssh git supervisor sudo xorg-server \
+    pacman -S --noconfirm openssh git supervisor sudo xorg-server \
     vim curl wget xf86-video-intel xorg-xauth python-paramiko pulseaudio \
-    gstreamer \
-    gstreamer-vaapi \
-    gst-plugins-base \
-    gst-plugins-good \
-    gst-plugins-bad \
-    gst-plugins-ugly \
-    gst-libav \
-    intel-media-driver \
-    x264 \
-    openh264 \
-    libvpx \
-    svt-av1 \
-    libva-utils \
-    libvdpau-va-gl
+    gstreamer gstreamer-vaapi \
+    gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav \
+    intel-media-driver x264 openh264 libvpx svt-av1 libva-utils libvdpau-va-gl
 
 COPY supervisor/sshd.ini /etc/supervisor.d/sshd.ini
 COPY supervisor/dbus.ini /etc/supervisor.d/dbus.ini
@@ -42,7 +31,7 @@ RUN sudo sed -i 's/\(OPTIONS=(.*\)debug\(.*)\)/\1!debug\2/' /etc/makepkg.conf &&
     makepkg -si --noconfirm && \
     cd ~ && \
     rm -rf yay-bin* && \
-    yay -S xpra-html5-git --noconfirm 
+    yay -S xpra-git xpra-html5-git --noconfirm 
 
 
 EXPOSE 10000
