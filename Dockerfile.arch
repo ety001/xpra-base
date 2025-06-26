@@ -1,7 +1,7 @@
 FROM archlinux:multilib-devel
 
 RUN pacman -Syy && pacman -Syu --noconfirm && \
-    pacman -S --noconfirm openssh git supervisor sudo xorg-server \
+    pacman -S --noconfirm openssh git supervisor sudo xorg-server xdg-utils \
     vim curl wget xf86-video-intel xorg-xauth python-paramiko pulseaudio \
     gstreamer gstreamer-vaapi \
     gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav \

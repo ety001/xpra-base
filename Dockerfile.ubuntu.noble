@@ -16,7 +16,7 @@ RUN apt update -y && \
     wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc && \
     wget -O "/etc/apt/sources.list.d/xpra.sources" https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/$DISTRO/${REPO}.sources && \
     apt update && \
-    apt install -y xserver-xorg xpra menu && \
+    apt install -y xserver-xorg xpra xdg-utils menu && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
