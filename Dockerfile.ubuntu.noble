@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt update -y && \
     apt upgrade -y && \
-    apt install -y ca-certificates wget gpg openssh-server supervisor sudo curl \
+    apt install -y ca-certificates wget gpg openssh-server supervisor sudo curl fcitx5-pinyin \
         vim apt-transport-https software-properties-common fonts-wqy-zenhei fonts-wqy-microhei && \
     add-apt-repository -y ppa:kobuk-team/intel-graphics && \
     apt-get install -y libze-intel-gpu1 libze1 intel-metrics-discovery intel-opencl-icd clinfo intel-gsc && \
