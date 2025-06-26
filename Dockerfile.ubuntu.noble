@@ -9,8 +9,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt update -y && \
     apt upgrade -y && \
-    apt install -y ca-certificates wget gpg openssh-server supervisor sudo \
-        vim apt-transport-https software-properties-common && \
+    apt install -y ca-certificates wget gpg openssh-server supervisor sudo curl \
+        vim apt-transport-https software-properties-common fonts-wqy-zenhei fonts-wqy-microhei && \
     add-apt-repository -y ppa:kobuk-team/intel-graphics && \
     apt-get install -y libze-intel-gpu1 libze1 intel-metrics-discovery intel-opencl-icd clinfo intel-gsc && \
     wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc && \
@@ -20,9 +20,9 @@ RUN apt update -y && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
-ADD ./shell/entry.sh /usr/local/bin/entry.sh
-ADD ./supervisor/sshd.conf /etc/supervisor/conf.d/sshd.conf
-ADD ./supervisor/dbus.conf /etc/supervisor/conf.d/dbus.conf
+ADD ./shell/entry-ubuntu.sh /usr/local/bin/entry.sh
+ADD ./supervisor/ubuntu/sshd.conf /etc/supervisor/conf.d/sshd.conf
+ADD ./supervisor/ubuntu/dbus.conf /etc/supervisor/conf.d/dbus.conf
 
 RUN mkdir -p /run/sshd && \
     mkdir -p /run/user/1001 && \
