@@ -6,17 +6,20 @@ FROM ubuntu:noble-20250529
 ENV REPO xpra-lts
 ENV DISTRO noble
 ENV DEBIAN_FRONTEND noninteractive
+ENV LANG zh_CN.UTF-8
+ENV LANGUAGE zh_CN:zh
+ENV LC_ALL zh_CN.UTF-8
 
 RUN apt update -y && \
     apt upgrade -y && \
-    apt install -y ca-certificates wget gpg openssh-server supervisor sudo curl fcitx5-pinyin \
-        vim apt-transport-https software-properties-common fonts-wqy-zenhei fonts-wqy-microhei && \
-    add-apt-repository -y ppa:kobuk-team/intel-graphics && \
-    apt-get install -y libze-intel-gpu1 libze1 intel-metrics-discovery intel-opencl-icd clinfo intel-gsc && \
+    apt install -y ca-certificates wget openssh-server supervisor sudo curl vim \
+        locales keyboard-configuration fonts-wqy-zenhei fonts-wqy-microhei ibus-pinyin \
+        intel-media-va-driver-non-free vainfo mesa-utils libdrm2 libva-drm2 libva2 && \
+    locale-gen zh_CN.UTF-8 && \
     wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc && \
     wget -O "/etc/apt/sources.list.d/xpra.sources" https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/$DISTRO/${REPO}.sources && \
     apt update && \
-    apt install -y xserver-xorg xpra xdg-utils menu && \
+    apt install -y xserver-xorg xdg-utils menu xpra && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -34,7 +37,11 @@ RUN mkdir -p /run/sshd && \
     sed -i 's/^#\?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     sed -i 's/^#\?PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config && \
     sed -i 's/^#\?PubkeyAuthentication .*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
-    xdg-desktop-menu forceupdate
+    xdg-desktop-menu forceupdate && \
+    echo "export IBUS_ENABLE_SYNC_MODE=1" >> /etc/environment && \
+    echo "export GTK_IM_MODULE=ibus" >> /etc/environment && \
+    echo "export XMODIFIERS=@im=ibus" >> /etc/environment && \
+    echo "export QT_IM_MODULE=ibus" >> /etc/environment
 
 WORKDIR /home/lzc
 USER lzc
