@@ -1,9 +1,8 @@
 FROM ubuntu:noble-20250529
 
 # other options:
-# REPO="xpra-lts"
-# REPO="xpra-beta"
-ENV REPO xpra-lts
+ENV REPO xpra-beta
+#ENV REPO xpra-lts
 ENV DISTRO noble
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG zh_CN.UTF-8
