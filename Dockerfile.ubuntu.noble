@@ -30,18 +30,15 @@ ADD ./conf/ubuntu/debian-menu.menu /etc/xdg/menus/debian-menu.menu
 
 RUN mkdir -p /run/sshd && \
     mkdir -p /run/user/1001 && \
-    groupadd -r lzc && \
-    useradd -m -d /home/lzc -g lzc -G render,sudo,video,sgx -s /bin/bash lzc && \
+    groupadd --gid 1001 -r lzc && \
+    useradd --uid 1001 -m -d /home/lzc -g lzc -G render,sudo,video,sgx -s /bin/bash lzc && \
     chown -R lzc:lzc /run/user/1001 && \
+    chmod 0700 /run/user/1001 && \
     sed -i 's/^%sudo.*/%sudo ALL=(ALL) NOPASSWD:ALL/' /etc/sudoers && \
     sed -i 's/^#\?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     sed -i 's/^#\?PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config && \
     sed -i 's/^#\?PubkeyAuthentication .*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
-    xdg-desktop-menu forceupdate && \
-    echo "export IBUS_ENABLE_SYNC_MODE=1" >> /etc/environment && \
-    echo "export GTK_IM_MODULE=ibus" >> /etc/environment && \
-    echo "export XMODIFIERS=@im=ibus" >> /etc/environment && \
-    echo "export QT_IM_MODULE=ibus" >> /etc/environment
+    xdg-desktop-menu forceupdate
 
 WORKDIR /home/lzc
 USER lzc
